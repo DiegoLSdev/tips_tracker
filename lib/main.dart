@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tips_app_from_scratch/controller/tip_provider.dart';
-import 'package:tips_app_from_scratch/screens/home_screen.dart';
+import 'package:tips_tracker/controller/tip_provider.dart';
+import 'package:tips_tracker/screens/home_screen.dart';
 
 void main() {
   runApp(const MyApp());

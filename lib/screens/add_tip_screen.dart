@@ -1,6 +1,6 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
-import 'package:tips_app_from_scratch/styles/theme.dart';
+import 'package:tips_tracker/styles/theme.dart';
 import '../components/add_tip_dialog.dart';
 
 class AddTipScreen extends StatefulWidget {

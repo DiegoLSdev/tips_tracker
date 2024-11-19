@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tips_app_from_scratch/screens/add_tip_screen.dart';
-import 'package:tips_app_from_scratch/screens/yearly_and_monthly_screen.dart';
+import 'package:tips_tracker/screens/add_tip_screen.dart';
+import 'package:tips_tracker/screens/yearly_and_monthly_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

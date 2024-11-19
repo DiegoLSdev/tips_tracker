@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-import 'package:tips_app_from_scratch/styles/theme.dart';
+import 'package:tips_tracker/styles/theme.dart';
 import '../controller/tip_provider.dart';
 import '../model/tip.dart';
 

@@ -1,4 +1,4 @@
-package com.example.tips_app_from_scratch
+package com.example.tips_tracker
 
 import io.flutter.embedding.android.FlutterActivity
 

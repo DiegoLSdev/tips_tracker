@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tips_app_from_scratch/styles/theme.dart';
+import 'package:tips_tracker/styles/theme.dart';
 import '../controller/tip_provider.dart';
 
 class MonthlyAndYearlyTipsScreen extends StatefulWidget {
@@ -28,19 +28,49 @@ class _MonthlyAndYearlyTipsScreenState
           tipDate.month == _currentMonth.month;
     }).toList();
 
+    // Agrupar tips por fecha
+    final groupedTips = <String, Map<String, double>>{};
+    for (var tip in monthlyTips) {
+      final tipDate = DateFormat('yyyy-MM-dd').parse(tip.date);
+      final formattedDate = DateFormat('MMMM d').format(tipDate);
+
+      // Inicializar si no existe
+      groupedTips[formattedDate] ??= {'euro': 0.0, 'dollar': 0.0};
+
+      // Sumar montos según la moneda
+      if (tip.currency) {
+        groupedTips[formattedDate]!['euro'] =
+            (groupedTips[formattedDate]!['euro'] ?? 0) + tip.amount;
+      } else {
+        groupedTips[formattedDate]!['dollar'] =
+            (groupedTips[formattedDate]!['dollar'] ?? 0) + tip.amount;
+      }
+    }
+
+    // Lista de fechas con sus totales combinados
+    final groupedTipsList = groupedTips.entries
+        .map((entry) => {
+              'date': entry.key,
+              'euro': entry.value['euro']!,
+              'dollar': entry.value['dollar']!,
+            })
+        .toList();
+
+    // Calcular totales mensuales para resumen
+    final monthlyTotalEuro = groupedTipsList.fold(
+        0.0, (sum, entry) => sum + (entry['euro'] as double));
+    final monthlyTotalDollar = groupedTipsList.fold(
+        0.0, (sum, entry) => sum + (entry['dollar'] as double));
+
+
+
     // Filter tips by current year
     final yearlyTips = tipProvider.items.where((tip) {
       final tipDate = DateFormat('yyyy-MM-dd').parse(tip.date);
       return tipDate.year == _currentYear.year;
     }).toList();
 
-    // Calculate monthly totals for Euros and Dollars
-    final monthlyTotalEuro = monthlyTips
-        .where((tip) => tip.currency) // Euros
-        .fold(0.0, (sum, tip) => sum + tip.amount);
-    final monthlyTotalDollar = monthlyTips
-        .where((tip) => !tip.currency) // Dollars
-        .fold(0.0, (sum, tip) => sum + tip.amount);
+
 
     // Calculate yearly totals for Euros and Dollars
     final yearlyTotalEuro = yearlyTips
@@ -49,7 +79,7 @@ class _MonthlyAndYearlyTipsScreenState
     final yearlyTotalDollar = yearlyTips
         .where((tip) => !tip.currency) // Dollars
         .fold(0.0, (sum, tip) => sum + tip.amount);
-
+        
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -100,34 +130,41 @@ class _MonthlyAndYearlyTipsScreenState
               ],
             ),
             const SizedBox(height: 8),
-            Expanded(
-              child: monthlyTips.isNotEmpty
-                  ? ListView.builder(
-                      itemCount: monthlyTips.length,
-                      itemBuilder: (context, index) {
-                        final tip = monthlyTips[index];
-                        return Card(
-                          color: Colors.teal,
-                          margin: const EdgeInsets.symmetric(vertical: 4),
-                          child: ListTile(
-                            textColor: Colors.white,
-                            title: Text(DateFormat('MMMM d').format(
-                                DateFormat('yyyy-MM-dd').parse(tip.date))),
-                            trailing: Text(
-                              "${tip.currency ? '€' : '\$'}${tip.amount.toStringAsFixed(2)}",
-                              style: AppTextStyles.cardPriceText,
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                  : const Center(
-                      child: Text(
-                        "No tips for this month yet!",
-                        style: AppTextStyles.mainNotFoundTitle,
-                      ),
-                    ),
-            ),
+
+
+Expanded(
+  child: groupedTipsList.isNotEmpty
+      ? ListView.builder(
+          itemCount: groupedTipsList.length,
+          itemBuilder: (context, index) {
+            final tipData = groupedTipsList[index];
+            final euro = tipData['euro'] as double;
+            final dollar = tipData['dollar'] as double;
+
+            return Card(
+              color: Colors.teal,
+              margin: const EdgeInsets.symmetric(vertical: 4),
+              child: ListTile(
+                textColor: Colors.white,
+                title: Text(tipData['date'] as String),
+                trailing: Text(
+                  "${euro > 0 ? '€${euro.toStringAsFixed(2)}' : ''} ${dollar > 0 ? '/ \$${dollar.toStringAsFixed(2)}' : ''}".trim(),
+                  style: AppTextStyles.cardPriceText,
+                ),
+              ),
+            );
+          },
+        )
+      : const Center(
+          child: Text(
+            "No tips for this month yet!",
+            style: AppTextStyles.mainNotFoundTitle,
+          ),
+        ),
+),
+
+            
+            
             const Divider(),
             // Yearly Summary
             Row(

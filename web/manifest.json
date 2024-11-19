@@ -1,6 +1,6 @@
 {
-    "name": "tips_app_from_scratch",
-    "short_name": "tips_app_from_scratch",
+    "name": "tips_tracker",
+    "short_name": "tips_tracker",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
