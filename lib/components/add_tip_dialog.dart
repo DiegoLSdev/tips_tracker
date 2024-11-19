@@ -36,7 +36,7 @@ class _AddTipDialogState extends State<AddTipDialog> {
                 .replaceAll("-", "."),
             style: AppTextStyles.mainTitleSecondary,
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 16),
 
           // Currency Selector
           CupertinoSlidingSegmentedControl<int>(
@@ -132,9 +132,10 @@ class _AddTipDialogState extends State<AddTipDialog> {
                       // Show a success Snackbar
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Tip successfully added!'),
-                          backgroundColor: Colors.teal,
+                          content: Text('Tip successfully added!',style: TextStyle(color: Colors.teal),),
+                          backgroundColor: Colors.white,
                           duration: Duration(seconds: 2),
+                          
                         ),
                       );
                     }

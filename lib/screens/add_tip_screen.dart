@@ -32,7 +32,7 @@ class _AddTipScreenState extends State<AddTipScreen> {
       body: Container(
         color: Colors.white, // Set the background color here
         child: Padding(
-          padding: const EdgeInsets.all(35.0),
+          padding: const EdgeInsets.all(30.0),
           child: Column(
             children: [
               // Calendar Widget
