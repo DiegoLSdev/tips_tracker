@@ -7,18 +7,33 @@ class TipProvider extends ChangeNotifier {
 
   List<Tip> get items => _items;
 
+  // Add a new tip
   void addTip(Tip tip) {
     _items.add(tip);
-    notifyListeners(); // Notify listeners about the change
+    notifyListeners();
   }
 
-   void deleteTip(String formattedDate) {
-    // Find and remove tips that match the provided date
+  // Delete tips based on date
+  void deleteTip(String formattedDate) {
     _items.removeWhere((tip) {
       final tipDate = DateFormat('yyyy-MM-dd').parse(tip.date);
       final tipFormattedDate = DateFormat('MMMM d').format(tipDate);
       return tipFormattedDate == formattedDate;
     });
-    notifyListeners(); // Notify listeners to update the UI
+    notifyListeners();
+  }
+
+  // Clear all tips
+  void clearAllTips() {
+    _items.clear();
+    notifyListeners();
+  }
+
+  // Edit an existing tip (if required later)
+  void editTip(int index, Tip newTip) {
+    if (index >= 0 && index < _items.length) {
+      _items[index] = newTip;
+      notifyListeners();
+    }
   }
 }

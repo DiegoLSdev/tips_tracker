@@ -23,7 +23,7 @@ class _AddTipScreenState extends State<AddTipScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title:  Text(
           'Add Tip',
           style: AppTextStyles.mainTitle,
         ),

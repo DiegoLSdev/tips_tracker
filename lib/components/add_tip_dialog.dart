@@ -43,16 +43,16 @@ class _AddTipDialogState extends State<AddTipDialog> {
             groupValue: currencyIndex,
             backgroundColor: Colors.teal.withOpacity(0.2),
             thumbColor: Colors.teal,
-            children: const <int, Widget>{
+            children:  <int, Widget>{
               0: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
                   '€',
                   style: AppTextStyles.mainTitle,
                 ),
               ),
               1: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
                   '\$',
                   style: AppTextStyles.mainTitle,

@@ -62,15 +62,11 @@ class _MonthlyAndYearlyTipsScreenState
     final monthlyTotalDollar = groupedTipsList.fold(
         0.0, (sum, entry) => sum + (entry['dollar'] as double));
 
-
-
     // Filter tips by current year
     final yearlyTips = tipProvider.items.where((tip) {
       final tipDate = DateFormat('yyyy-MM-dd').parse(tip.date);
       return tipDate.year == _currentYear.year;
     }).toList();
-
-
 
     // Calculate yearly totals for Euros and Dollars
     final yearlyTotalEuro = yearlyTips
@@ -79,7 +75,7 @@ class _MonthlyAndYearlyTipsScreenState
     final yearlyTotalDollar = yearlyTips
         .where((tip) => !tip.currency) // Dollars
         .fold(0.0, (sum, tip) => sum + tip.amount);
-        
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -97,14 +93,14 @@ class _MonthlyAndYearlyTipsScreenState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _currentMonth =
-                          DateTime(_currentMonth.year, _currentMonth.month - 1);
-                    });
-                  },
-                  icon: const Icon(Icons.arrow_back),color: Colors.grey
-                ),
+                    onPressed: () {
+                      setState(() {
+                        _currentMonth = DateTime(
+                            _currentMonth.year, _currentMonth.month - 1);
+                      });
+                    },
+                    icon: const Icon(Icons.arrow_back),
+                    color: Colors.grey),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -119,73 +115,76 @@ class _MonthlyAndYearlyTipsScreenState
                   ],
                 ),
                 IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _currentMonth =
-                          DateTime(_currentMonth.year, _currentMonth.month + 1);
-                    });
-                  },
-                  icon: const Icon(Icons.arrow_forward),color: Colors.grey
-                ),
+                    onPressed: () {
+                      setState(() {
+                        _currentMonth = DateTime(
+                            _currentMonth.year, _currentMonth.month + 1);
+                      });
+                    },
+                    icon: const Icon(Icons.arrow_forward),
+                    color: Colors.grey),
               ],
             ),
             const SizedBox(height: 8),
 
+            Expanded(
+              child: groupedTipsList.isNotEmpty
+                  ? DataTable(
+                      columns: const [
+                        DataColumn(
+                          label: Text('Date',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                        DataColumn(
+                          label: Text('€',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                        DataColumn(
+                          label: Text('\$',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                        DataColumn(
+                          label: Text('Actions',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                      rows: groupedTipsList.map((tipData) {
+                        final euro = tipData['euro'] as double;
+                        final dollar = tipData['dollar'] as double;
 
-Expanded(
-  child: groupedTipsList.isNotEmpty
-      ? ListView.builder(
-          itemCount: groupedTipsList.length,
-          itemBuilder: (context, index) {
-            // Ensure the list is sorted by date
-            groupedTipsList.sort((a, b) {
-              final dateA = DateFormat('MMMM d').parse(a['date'] as String);
-              final dateB = DateFormat('MMMM d').parse(b['date'] as String);
-              return dateA.compareTo(dateB);
-            });
-
-            final tipData = groupedTipsList[index];
-            final euro = tipData['euro'] as double;
-            final dollar = tipData['dollar'] as double;
-
-            return Card(
-              color: Colors.teal,
-              margin: const EdgeInsets.symmetric(vertical: 4),
-              child: ListTile(
-                textColor: Colors.white,
-                title: Text(tipData['date'] as String),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      "${euro > 0 ? '€${euro.toStringAsFixed(2)}' : ''} ${dollar > 0 ? '/ \$${dollar.toStringAsFixed(2)}' : ''}".trim(),
-                      style: AppTextStyles.cardPriceText,
+                        return DataRow(cells: [
+                          DataCell(
+                            Text(
+                              DateFormat('d').format(
+                                DateFormat('MMMM d')
+                                    .parse(tipData['date'] as String),
+                              ),
+                            ),
+                          ),
+                          DataCell(Text('€${euro.toStringAsFixed(2)}')),
+                          DataCell(Text('\$${dollar.toStringAsFixed(2)}')),
+                          DataCell(
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                // Eliminar el tip del proveedor
+                                tipProvider
+                                    .deleteTip(tipData['date'] as String);
+                                setState(() {}); // Refrescar la UI
+                              },
+                            ),
+                          ),
+                        ]);
+                      }).toList(),
+                    )
+                  : Center(
+                      child: Text(
+                        "No tips for this month yet!",
+                        style: AppTextStyles.mainNotFoundTitle,
+                      ),
                     ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        // Remove the tip from the provider
-                        tipProvider.deleteTip(tipData['date'] as String);
-                        setState(() {}); // Refresh the UI
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        )
-      : const Center(
-          child: Text(
-            "No tips for this month yet!",
-            style: AppTextStyles.mainNotFoundTitle,
-          ),
-        ),
-),
+            ),
 
-            
-            
             const Divider(),
             // Yearly Summary
             Row(
@@ -197,18 +196,19 @@ Expanded(
                       _currentYear = DateTime(_currentYear.year - 1);
                     });
                   },
-                  icon: const Icon(Icons.arrow_back),color: Colors.grey,
+                  icon: const Icon(Icons.arrow_back),
+                  color: Colors.grey,
                 ),
                 Text(DateFormat('yyyy').format(_currentYear),
                     style: AppTextStyles.mainTitleSecondary),
                 IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _currentYear = DateTime(_currentYear.year + 1);
-                    });
-                  },
-                  icon: const Icon(Icons.arrow_forward),color: Colors.grey
-                ),
+                    onPressed: () {
+                      setState(() {
+                        _currentYear = DateTime(_currentYear.year + 1);
+                      });
+                    },
+                    icon: const Icon(Icons.arrow_forward),
+                    color: Colors.grey),
               ],
             ),
             const SizedBox(height: 8),
