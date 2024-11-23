@@ -137,6 +137,13 @@ Expanded(
       ? ListView.builder(
           itemCount: groupedTipsList.length,
           itemBuilder: (context, index) {
+            // Ensure the list is sorted by date
+            groupedTipsList.sort((a, b) {
+              final dateA = DateFormat('MMMM d').parse(a['date'] as String);
+              final dateB = DateFormat('MMMM d').parse(b['date'] as String);
+              return dateA.compareTo(dateB);
+            });
+
             final tipData = groupedTipsList[index];
             final euro = tipData['euro'] as double;
             final dollar = tipData['dollar'] as double;
@@ -147,9 +154,23 @@ Expanded(
               child: ListTile(
                 textColor: Colors.white,
                 title: Text(tipData['date'] as String),
-                trailing: Text(
-                  "${euro > 0 ? '€${euro.toStringAsFixed(2)}' : ''} ${dollar > 0 ? '/ \$${dollar.toStringAsFixed(2)}' : ''}".trim(),
-                  style: AppTextStyles.cardPriceText,
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "${euro > 0 ? '€${euro.toStringAsFixed(2)}' : ''} ${dollar > 0 ? '/ \$${dollar.toStringAsFixed(2)}' : ''}".trim(),
+                      style: AppTextStyles.cardPriceText,
+                    ),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        // Remove the tip from the provider
+                        tipProvider.deleteTip(tipData['date'] as String);
+                        setState(() {}); // Refresh the UI
+                      },
+                    ),
+                  ],
                 ),
               ),
             );
