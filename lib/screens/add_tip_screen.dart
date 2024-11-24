@@ -22,15 +22,14 @@ class _AddTipScreenState extends State<AddTipScreen> {
     // final tipProvider = Provider.of<TipProvider>(context);
 
     return Scaffold(
+      // backgroundColor: Colors.red,
       appBar: AppBar(
-        title:  Text(
-          'Add Tip',
-          style: AppTextStyles.mainTitle,
-        ),
+        title: Text('Add Tip', style: DarkStyles.title),
         backgroundColor: Colors.teal,
       ),
       body: Container(
-        color: Colors.white, // Set the background color here
+        color: const Color.fromRGBO(
+            234, 234, 234, 1), // Set the background color here
         child: Padding(
           padding: const EdgeInsets.all(30.0),
           child: Column(
@@ -38,28 +37,40 @@ class _AddTipScreenState extends State<AddTipScreen> {
               // Calendar Widget
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white, // Set the background color here
+                  
+                  color:  const Color.fromRGBO(255, 255, 255, 1), // Set the background color here
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    // Add border property here
-                    color: Colors.teal, // Border color
-                    width: 2.0, // Border width
-                  ),
+                  // border: Border.all(
+                  // Add border property here
+                  // color: Colors.blue, // Border color
+                  // width: 2.0, // Border width
+                  // ),
                 ),
                 child: CalendarDatePicker2(
                   config: CalendarDatePicker2Config(
-                    dayTextStyle: const TextStyle(fontWeight: FontWeight.bold),
+                    
+                    selectedMonthTextStyle:
+                        const TextStyle(color: Colors.teal),
+                    yearTextStyle:
+                        const TextStyle(color: Colors.teal),
+                    monthTextStyle:
+                        const TextStyle(color: Colors.teal),
+                    dayTextStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
                     firstDayOfWeek: 1,
                     selectedDayTextStyle: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Colors.teal,
                     ),
                     weekdayLabelTextStyle: const TextStyle(
                       color: Colors.teal,
                       fontWeight: FontWeight.bold,
                     ),
-                    selectedDayHighlightColor: Colors.teal,
-                    daySplashColor: Colors.red.shade200,
+                    
+                    selectedDayHighlightColor:
+                         Colors.teal.withOpacity(0.19),
+                    daySplashColor: Colors.blue
                   ),
                   value: [selectedDate],
                   onValueChanged: (dates) {
@@ -72,51 +83,13 @@ class _AddTipScreenState extends State<AddTipScreen> {
               ),
 
               const SizedBox(height: 16),
-              // Display the selected date
-              // Text(
-              //   DateFormat('yyyy-MM-dd').format(selectedDate).replaceAll("-", "."),
-              //   style: const TextStyle(
-              //     color: Colors.white,
-              //     fontWeight: FontWeight.w600,
-              //     fontSize: 18,
-              //   ),
-              // ),
-              const SizedBox(height: 16),
 
-              // Tip Input Form (This was previously in the AddTipDialog)
               AddTipDialog(
                 selectedDate: selectedDate,
                 onAddTip: () {
-                  setState(() {
-                    // Here you would set selectedTipIndex to null if you want to reset
-                  });
+                  setState(() {});
                 },
               ),
-              // const SizedBox(height: 16),
-
-              // Show Tips List
-              // Expanded(
-              //   child: ListView.builder(
-              //     itemCount: tipProvider.items.length,
-              //     itemBuilder: (context, index) {
-              //       final tip = tipProvider.items[index];
-              //       return ListTile(
-              //         title: Text(
-              //           "Amount: ${tip.currency ? '€' : '\$'}${tip.amount}",
-              //           style: const TextStyle(
-              //             color: Colors.red,
-              //             fontSize: 12
-              //           ),
-              //         ),
-              //         trailing: Text("Date: ${tip.date}",
-              //         style: const TextStyle(
-              //           color: Colors.red,
-              //           fontSize: 12
-              //         ),),
-              //       );
-              //     },
-              //   ),
-              // ),
             ],
           ),
         ),

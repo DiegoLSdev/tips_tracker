@@ -19,11 +19,10 @@ class MyApp extends StatelessWidget {
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 690), // Base diseño móvil
-        builder: (context, child) => MaterialApp(
+        builder: (context, child) => const MaterialApp(
           debugShowCheckedModeBanner: false,
           title: "Tips App",
-          theme: ThemeData(primarySwatch: Colors.teal),
-          home: const HomeScreen(),
+          home:  HomeScreen(),
         ),
       ),
     );

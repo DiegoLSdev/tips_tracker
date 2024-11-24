@@ -47,14 +47,19 @@ class _MonthlyAndYearlyTipsScreenState
       }
     }
 
-    // Lista de fechas con sus totales combinados
-    final groupedTipsList = groupedTips.entries
-        .map((entry) => {
-              'date': entry.key,
-              'euro': entry.value['euro']!,
-              'dollar': entry.value['dollar']!,
-            })
-        .toList();
+        final groupedTipsList = groupedTips.entries
+    .map((entry) => {
+          'date': entry.key,
+          'euro': entry.value['euro']!,
+          'dollar': entry.value['dollar']!,
+        })
+    .toList()
+  ..sort((a, b) {
+    // Parse dates for comparison
+    final dateA = DateFormat('MMMM d').parse(a['date'] as String);
+    final dateB = DateFormat('MMMM d').parse(b['date'] as String);
+    return dateA.compareTo(dateB); // Ascending order
+  });
 
     // Calcular totales mensuales para resumen
     final monthlyTotalEuro = groupedTipsList.fold(
@@ -76,13 +81,13 @@ class _MonthlyAndYearlyTipsScreenState
         .where((tip) => !tip.currency) // Dollars
         .fold(0.0, (sum, tip) => sum + tip.amount);
 
+
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromRGBO(234, 234, 234, 1),
       appBar: AppBar(
-        title: const Text('Summary'),
+        title: Text('Summary', style: DarkStyles.title),
         backgroundColor: Colors.teal,
-        titleTextStyle: const TextStyle(
-            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -106,11 +111,11 @@ class _MonthlyAndYearlyTipsScreenState
                   children: [
                     Text(
                       DateFormat('MMMM yyyy').format(_currentMonth),
-                      style: AppTextStyles.mainTitleSecondary,
+                      style: DarkStyles.title2,
                     ),
                     Text(
                       "Total: €${monthlyTotalEuro.toStringAsFixed(2)} / \$${monthlyTotalDollar.toStringAsFixed(2)}",
-                      style: AppTextStyles.subtitle,
+                      style: DarkStyles.subtitle2,
                     ),
                   ],
                 ),
@@ -127,63 +132,104 @@ class _MonthlyAndYearlyTipsScreenState
             ),
             const SizedBox(height: 8),
 
-            Expanded(
-              child: groupedTipsList.isNotEmpty
-                  ? DataTable(
-                      columns: const [
-                        DataColumn(
-                          label: Text('Date',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        DataColumn(
-                          label: Text('€',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        DataColumn(
-                          label: Text('\$',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        DataColumn(
-                          label: Text('Actions',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                      ],
-                      rows: groupedTipsList.map((tipData) {
-                        final euro = tipData['euro'] as double;
-                        final dollar = tipData['dollar'] as double;
+Expanded(
+  child: groupedTipsList.isNotEmpty
+      ? SingleChildScrollView(
+          child: DataTable(
+            columnSpacing: 38,
+            columns: [
+              DataColumn(
+                label: Center(
+                  child: Text(
+                    'Date',
+                    style: DarkStyles.subtitle1,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Center(
+                  child: Text(
+                    'Euro',
+                    style: DarkStyles.subtitle1,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Center(
+                  child: Text(
+                    'Dollar',
+                    style: DarkStyles.subtitle1,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Delete',
+                  style: DarkStyles.subtitle1,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+            rows: groupedTipsList.map((tipData) {
+              final euro = tipData['euro'] as double;
+              final dollar = tipData['dollar'] as double;
 
-                        return DataRow(cells: [
-                          DataCell(
-                            Text(
-                              DateFormat('d').format(
-                                DateFormat('MMMM d')
-                                    .parse(tipData['date'] as String),
-                              ),
-                            ),
-                          ),
-                          DataCell(Text('€${euro.toStringAsFixed(2)}')),
-                          DataCell(Text('\$${dollar.toStringAsFixed(2)}')),
-                          DataCell(
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () {
-                                // Eliminar el tip del proveedor
-                                tipProvider
-                                    .deleteTip(tipData['date'] as String);
-                                setState(() {}); // Refrescar la UI
-                              },
-                            ),
-                          ),
-                        ]);
-                      }).toList(),
-                    )
-                  : Center(
-                      child: Text(
-                        "No tips for this month yet!",
-                        style: AppTextStyles.mainNotFoundTitle,
+              return DataRow(cells: [
+                DataCell(
+                  Center(
+                    child: Text(
+                  style: DarkStyles.subtitle2,
+                      DateFormat('d').format(
+                        DateFormat('MMMM d').parse(tipData['date'] as String),
                       ),
+                      textAlign: TextAlign.center,
                     ),
-            ),
+                  ),
+                ),
+                DataCell(
+                  Center(
+                    child: Text(
+                  style: DarkStyles.subtitle2,
+                      '€${euro.toStringAsFixed(2)}',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                DataCell(
+                  Center(
+                    child: Text(
+                  style: DarkStyles.subtitle2,
+                      '\$${dollar.toStringAsFixed(2)}',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                DataCell(
+                  Center(
+                    child: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        // Eliminar el tip del proveedor
+                        tipProvider.deleteTip(tipData['date'] as String);
+                        setState(() {}); // Refrescar la UI
+                      },
+                    ),
+                  ),
+                ),
+              ]);
+            }).toList(),
+          ),
+        )
+      : Center(
+          child: Text(
+            "No tips for this month yet!",
+            style: DarkStyles.mainNotFoundTitle,
+          ),
+        ),
+),
 
             const Divider(),
             // Yearly Summary
@@ -200,7 +246,7 @@ class _MonthlyAndYearlyTipsScreenState
                   color: Colors.grey,
                 ),
                 Text(DateFormat('yyyy').format(_currentYear),
-                    style: AppTextStyles.mainTitleSecondary),
+                    style: DarkStyles.title2),
                 IconButton(
                     onPressed: () {
                       setState(() {
@@ -217,7 +263,7 @@ class _MonthlyAndYearlyTipsScreenState
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Card(
-                  // color: Colors.white,
+                  color: Colors.teal,
                   elevation: 4,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -234,13 +280,14 @@ class _MonthlyAndYearlyTipsScreenState
                         const SizedBox(height: 4),
                         Text(
                           "€ ${yearlyTotalEuro.toStringAsFixed(2)}",
-                          style: AppTextStyles.mainTitleSecondary,
+                          style: DarkStyles.title,
                         ),
                       ],
                     ),
                   ),
                 ),
                 Card(
+                  color: Colors.teal,
                   elevation: 4,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -256,7 +303,7 @@ class _MonthlyAndYearlyTipsScreenState
                         const SizedBox(height: 4),
                         Text(
                           "\$ ${yearlyTotalDollar.toStringAsFixed(2)}",
-                          style: AppTextStyles.mainTitleSecondary,
+                          style: DarkStyles.title,
                         ),
                       ],
                     ),

@@ -21,6 +21,30 @@ class _AddTipDialogState extends State<AddTipDialog> {
   int currencyIndex = 0; // 0: Euro, 1: Dollar
   double amount = 0.0;
 
+String formatDate(DateTime? date) {
+  date ??= DateTime.now();
+  return DateFormat("d 'of' MMMM, yyyy").format(date).replaceAllMapped(
+      RegExp(r'(\d+)(?=\s(of)\s)'),
+      (Match match) =>
+          "${match.group(1)}${_getOrdinalSuffix(int.parse(match.group(1)!))}");
+}
+
+String _getOrdinalSuffix(int number) {
+  if (number >= 11 && number <= 13) return "th";
+  switch (number % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
+}
+
+
+
   @override
   Widget build(BuildContext context) {
     final tipProvider = Provider.of<TipProvider>(context, listen: false);
@@ -31,31 +55,29 @@ class _AddTipDialogState extends State<AddTipDialog> {
         children: [
           // Display Selected Date
           Text(
-            DateFormat('yyyy-MM-dd')
-                .format(widget.selectedDate ?? DateTime.now())
-                .replaceAll("-", "."),
-            style: AppTextStyles.mainTitleSecondary,
+            formatDate(widget.selectedDate),
+            style: DarkStyles.title2,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
 
           // Currency Selector
           CupertinoSlidingSegmentedControl<int>(
             groupValue: currencyIndex,
-            backgroundColor: Colors.teal.withOpacity(0.2),
+            backgroundColor: const Color.fromARGB(255, 74, 74, 74),
             thumbColor: Colors.teal,
-            children:  <int, Widget>{
+            children: <int, Widget>{
               0: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
                   '€',
-                  style: AppTextStyles.mainTitle,
+                  style: DarkStyles.title,
                 ),
               ),
               1: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
                   '\$',
-                  style: AppTextStyles.mainTitle,
+                  style: DarkStyles.title,
                 ),
               ),
             },
@@ -71,8 +93,7 @@ class _AddTipDialogState extends State<AddTipDialog> {
 
           // Amount Input
           Row(
-            mainAxisAlignment:
-                MainAxisAlignment.center, // Centers the children horizontally
+            mainAxisAlignment: MainAxisAlignment.center, // Centers the children horizontally
             children: [
               Container(
                 width: 100,
@@ -84,6 +105,7 @@ class _AddTipDialogState extends State<AddTipDialog> {
                 child: TextField(
                   textAlign: TextAlign.center,
                   cursorColor: Colors.teal,
+                  cursorHeight: 25,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                   ],
@@ -92,9 +114,14 @@ class _AddTipDialogState extends State<AddTipDialog> {
                   ),
                   decoration: const InputDecoration(
                     hintText: 'Amount',
-                    hintStyle: TextStyle(color: Colors.teal),
+                    hintStyle: TextStyle(
+                      color: Colors.teal,
+                      fontSize: 24,
+                    ),
+                    contentPadding:
+                        EdgeInsets.only(bottom: 16), // Adds space between hint and underline
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
+                      borderSide: BorderSide(color: Colors.teal),
                     ),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.teal),
@@ -109,12 +136,18 @@ class _AddTipDialogState extends State<AddTipDialog> {
                   },
                 ),
               ),
-              const SizedBox(height: 25),
+              const SizedBox(width: 20),
               SizedBox(
-                width: 50,
-                height: 30,
-                child: FloatingActionButton(
-                  backgroundColor: Colors.teal,
+                width: 60,
+                height: 40,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.all(8),
+                  ),
                   onPressed: () {
                     if (widget.selectedDate != null && amount > 0) {
                       tipProvider.addTip(
@@ -132,19 +165,21 @@ class _AddTipDialogState extends State<AddTipDialog> {
                       // Show a success Snackbar
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Tip successfully added!',style: TextStyle(color: Colors.teal),),
+                          content: Text(
+                            'Tip successfully added!',
+                            style: TextStyle(color: Colors.teal),
+                          ),
                           backgroundColor: Colors.white,
                           duration: Duration(seconds: 2),
-                          
                         ),
                       );
                     }
                   },
                   child: const Text(
-                    "+",
+                    "Add",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
