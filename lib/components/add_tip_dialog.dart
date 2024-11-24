@@ -20,30 +20,30 @@ class AddTipDialog extends StatefulWidget {
 class _AddTipDialogState extends State<AddTipDialog> {
   int currencyIndex = 0; // 0: Euro, 1: Dollar
   double amount = 0.0;
+  final TextEditingController amountController =
+      TextEditingController(); // Controller for amount input
 
-String formatDate(DateTime? date) {
-  date ??= DateTime.now();
-  return DateFormat("d 'of' MMMM, yyyy").format(date).replaceAllMapped(
-      RegExp(r'(\d+)(?=\s(of)\s)'),
-      (Match match) =>
-          "${match.group(1)}${_getOrdinalSuffix(int.parse(match.group(1)!))}");
-}
-
-String _getOrdinalSuffix(int number) {
-  if (number >= 11 && number <= 13) return "th";
-  switch (number % 10) {
-    case 1:
-      return "st";
-    case 2:
-      return "nd";
-    case 3:
-      return "rd";
-    default:
-      return "th";
+  String formatDate(DateTime? date) {
+    date ??= DateTime.now();
+    return DateFormat("d 'of' MMMM, yyyy").format(date).replaceAllMapped(
+        RegExp(r'(\d+)(?=\s(of)\s)'),
+        (Match match) =>
+            "${match.group(1)}${_getOrdinalSuffix(int.parse(match.group(1)!))}");
   }
-}
 
-
+  String _getOrdinalSuffix(int number) {
+    if (number >= 11 && number <= 13) return "th";
+    switch (number % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +93,8 @@ String _getOrdinalSuffix(int number) {
 
           // Amount Input
           Row(
-            mainAxisAlignment: MainAxisAlignment.center, // Centers the children horizontally
+            mainAxisAlignment:
+                MainAxisAlignment.center, // Centers the children horizontally
             children: [
               Container(
                 width: 100,
@@ -103,23 +104,23 @@ String _getOrdinalSuffix(int number) {
                   borderRadius: BorderRadius.circular(3),
                 ),
                 child: TextField(
+                  controller: amountController,
                   textAlign: TextAlign.center,
                   cursorColor: Colors.teal,
-                  cursorHeight: 25,
+                  // cursorHeight: 20,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                   ],
-                  style: const TextStyle(
-                    color: Colors.teal,
-                  ),
+                  style: const TextStyle(color: Colors.teal, fontSize: 24),
                   decoration: const InputDecoration(
                     hintText: 'Amount',
                     hintStyle: TextStyle(
-                      color: Colors.teal,
+                      color: Colors.grey,
+                      fontStyle: FontStyle.italic,
                       fontSize: 24,
                     ),
-                    contentPadding:
-                        EdgeInsets.only(bottom: 16), // Adds space between hint and underline
+                    contentPadding: EdgeInsets.only(
+                        bottom: 16), // Adds space between hint and underline
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.teal),
                     ),
@@ -161,13 +162,14 @@ String _getOrdinalSuffix(int number) {
                         ),
                       );
                       widget.onAddTip(); // Callback to refresh if needed
+                      amountController.clear();
 
                       // Show a success Snackbar
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
                             'Tip successfully added!',
-                            style: TextStyle(color: Colors.teal),
+                            style: TextStyle(color: Colors.teal, fontSize: 16),
                           ),
                           backgroundColor: Colors.white,
                           duration: Duration(seconds: 2),
