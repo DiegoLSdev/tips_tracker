@@ -83,7 +83,10 @@ class _MonthlyAndYearlyTipsScreenState
     return Scaffold(
       backgroundColor: const Color.fromRGBO(234, 234, 234, 1),
       appBar: AppBar(
-        title: const Text('Summary'),
+        title: const Text('Summary', style: TextStyle(
+          color: Colors.white,
+
+        ),),
         backgroundColor: Colors.teal,
       ),
       body: Padding(
@@ -108,9 +111,18 @@ class _MonthlyAndYearlyTipsScreenState
                   children: [
                     Text(
                       DateFormat('MMMM yyyy').format(_currentMonth),
+                      style: const TextStyle(
+                        color: Colors.teal,
+                        fontSize: 24,
+                      ),
                     ),
                     Text(
                       "Total: €${monthlyTotalEuro.toStringAsFixed(2)} / \$${monthlyTotalDollar.toStringAsFixed(2)}",
+                      style: const TextStyle(
+                        color: Colors.teal,
+                        fontSize: 16
+                      )
+
                     ),
                   ],
                 ),
@@ -138,6 +150,11 @@ class _MonthlyAndYearlyTipsScreenState
                               child: Text(
                                 'Date',
                                 textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.teal,
+                                  fontWeight: FontWeight.bold,
+                                    fontSize: 16
+                                ),
                               ),
                             ),
                           ),
@@ -146,6 +163,11 @@ class _MonthlyAndYearlyTipsScreenState
                               child: Text(
                                 'Euro',
                                 textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.teal,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16
+                                ),
                               ),
                             ),
                           ),
@@ -154,12 +176,22 @@ class _MonthlyAndYearlyTipsScreenState
                               child: Text(
                                 'Dollar',
                                 textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.teal,
+                                  fontWeight: FontWeight.bold,
+                                    fontSize: 16
+                                ),
                               ),
                             ),
                           ),
                           DataColumn(
                             label: Text(
                               'Delete',
+                              style: TextStyle(
+                                color: Colors.teal,
+                                fontWeight: FontWeight.bold,
+                                  fontSize: 16
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -177,6 +209,10 @@ class _MonthlyAndYearlyTipsScreenState
                                         .parse(tipData['date'] as String),
                                   ),
                                   textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.blueGrey,
+                                    fontSize: 16
+                                  ),
                                 ),
                               ),
                             ),
@@ -185,6 +221,10 @@ class _MonthlyAndYearlyTipsScreenState
                                 child: Text(
                                   '€${euro.toStringAsFixed(2)}',
                                   textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      color: Colors.blueGrey,
+                                      fontSize: 16
+                                  ),
                                 ),
                               ),
                             ),
@@ -192,6 +232,10 @@ class _MonthlyAndYearlyTipsScreenState
                               Center(
                                 child: Text(
                                   '\$${dollar.toStringAsFixed(2)}',
+                                  style: const TextStyle(
+                                      color: Colors.blueGrey,
+                                      fontSize: 16
+                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -200,7 +244,7 @@ class _MonthlyAndYearlyTipsScreenState
                               Center(
                                 child: IconButton(
                                   icon: const Icon(Icons.delete,
-                                      color: Colors.red),
+                                      color: Colors.teal),
                                   onPressed: () {
                                     // Eliminar el tip del proveedor
                                     tipProvider
@@ -235,7 +279,11 @@ class _MonthlyAndYearlyTipsScreenState
                   icon: const Icon(Icons.arrow_back),
                   color: Colors.grey,
                 ),
-                Text(DateFormat('yyyy').format(_currentYear)),
+                Text(DateFormat('yyyy').format(_currentYear),
+                  style: const TextStyle(
+                    color:Colors.teal,
+                    fontSize: 24
+                ),),
                 IconButton(
                     onPressed: () {
                       setState(() {
@@ -269,6 +317,10 @@ class _MonthlyAndYearlyTipsScreenState
                         const SizedBox(height: 4),
                         Text(
                           "€ ${yearlyTotalEuro.toStringAsFixed(2)}",
+                          style:const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24
+                          ),
                         ),
                       ],
                     ),
@@ -291,6 +343,10 @@ class _MonthlyAndYearlyTipsScreenState
                         const SizedBox(height: 4),
                         Text(
                           "\$ ${yearlyTotalDollar.toStringAsFixed(2)}",
+                          style: const TextStyle(
+                            color : Colors.white,
+                            fontSize: 24
+                          ),
                         ),
                       ],
                     ),

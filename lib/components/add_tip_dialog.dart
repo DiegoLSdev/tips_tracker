@@ -126,7 +126,7 @@ class _AddTipDialogState extends State<AddTipDialog> {
                           fontSize: 20,
                         ),
                       ),
-                      autofocus: true,
+                      autofocus: false,
                       keyboardType: TextInputType.number,
                       onChanged: (value) {
                         setState(() {
