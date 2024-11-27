@@ -106,7 +106,8 @@ class _AddTipDialogState extends State<AddTipDialog> {
                 child: TextField(
                   controller: amountController,
                   textAlign: TextAlign.center,
-                  cursorColor: Colors.teal,
+                  showCursor: false,
+                  //cursorColor: Colors.teal,
                   // cursorHeight: 20,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
