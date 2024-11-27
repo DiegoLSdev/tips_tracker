@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TipProvider()),
       ],
       child: ScreenUtilInit(
-//        designSize: const Size(360, 690), // Base diseño móvil
+        designSize: const Size(360, 690), // Base diseño móvil
         builder: (context, child) => const MaterialApp(
           debugShowCheckedModeBanner: false,
           title: "Tips App",
