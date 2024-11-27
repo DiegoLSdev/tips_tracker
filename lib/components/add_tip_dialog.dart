@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-import 'package:tips_tracker/styles/theme.dart';
 import '../controller/tip_provider.dart';
 import '../model/tip.dart';
 
@@ -50,144 +49,154 @@ class _AddTipDialogState extends State<AddTipDialog> {
     final tipProvider = Provider.of<TipProvider>(context, listen: false);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 0),
       child: Column(
         children: [
-          // Display Selected Date
           Text(
             formatDate(widget.selectedDate),
-            style: DarkStyles.title2,
+            style: const TextStyle(
+              color: Colors.teal,
+              fontSize: 22
+            ),
           ),
-          const SizedBox(height: 24),
 
-          // Currency Selector
-          CupertinoSlidingSegmentedControl<int>(
-            groupValue: currencyIndex,
-            backgroundColor: const Color.fromARGB(255, 74, 74, 74),
-            thumbColor: Colors.teal,
-            children: const <int, Widget>{
-              0: Padding(
-                padding:  EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  '€',
-                ),
-              ),
-              1: Padding(
-                padding:  EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  '\$',
-                ),
-              ),
-            },
-            onValueChanged: (int? newValue) {
-              if (newValue != null) {
-                setState(() {
-                  currencyIndex = newValue;
-                });
-              }
-            },
-          ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 15),
+
 
           // Amount Input
           Row(
-            mainAxisAlignment:
-                MainAxisAlignment.center, // Centers the children horizontally
+            mainAxisAlignment: MainAxisAlignment.center, // Centrar los grupos con menos separación
+            crossAxisAlignment: CrossAxisAlignment.center, // Alinear verticalmente
             children: [
-              Container(
-                width: 100,
-                height: 30,
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(3),
-                ),
-                child: TextField(
-                  controller: amountController,
-                  textAlign: TextAlign.center,
-                  showCursor: false,
-                  //cursorColor: Colors.teal,
-                  // cursorHeight: 20,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-                  ],
-                  style: const TextStyle(color: Colors.teal, fontSize: 24),
-                  decoration: const InputDecoration(
-                    hintText: 'Amount',
-                    hintStyle: TextStyle(
-                      color: Colors.grey,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 24,
-                    ),
-                    contentPadding: EdgeInsets.only(
-                        bottom: 16), // Adds space between hint and underline
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.teal),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.teal),
+              CupertinoSlidingSegmentedControl<int>(
+                groupValue: currencyIndex,
+                backgroundColor: const Color.fromARGB(255, 74, 74, 74),
+                thumbColor: Colors.teal,
+                children: const <int, Widget>{
+                  0: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      '€',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  autofocus: true,
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
+                  1: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      '\$',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                },
+                onValueChanged: (int? newValue) {
+                  if (newValue != null) {
                     setState(() {
-                      amount = double.tryParse(value) ?? 0.0;
+                      currencyIndex = newValue;
                     });
-                  },
-                ),
+                  }
+                },
               ),
-              const SizedBox(width: 20),
-              SizedBox(
-                width: 60,
-                height: 40,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.all(8),
-                  ),
-                  onPressed: () {
-                    if (widget.selectedDate != null && amount > 0) {
-                      tipProvider.addTip(
-                        Tip(
-                          amount: amount,
-                          currency: currencyIndex == 0,
-                          date: widget.selectedDate!
-                              .toLocal()
-                              .toString()
-                              .split(' ')[0],
-                        ),
-                      );
-                      widget.onAddTip(); // Callback to refresh if needed
-                      amountController.clear();
 
-                      // Show a success Snackbar
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Tip successfully added!',
-                            style: TextStyle(color: Colors.teal, fontSize: 16),
-                          ),
-                          backgroundColor: Colors.white,
-                          duration: Duration(seconds: 2),
+              const SizedBox(width: 20),
+
+              Row(
+                children: [
+                  // Input Field
+                  SizedBox(
+                    width: 100,
+                    child: TextField(
+                      controller: amountController,
+                      textAlign: TextAlign.center,
+                      showCursor: true,
+                      cursorColor: Colors.teal,
+                      cursorHeight: 20, // Coincide con el tamaño del texto
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                      ],
+                      style: const TextStyle(
+                        color: Colors.teal,
+                        fontSize: 20,
+                        height: 1.0,
+                      ),
+                      decoration: const InputDecoration.collapsed(
+                        hintText: 'Amount',
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontStyle: FontStyle.italic,
+                          fontSize: 20,
                         ),
-                      );
-                    }
-                  },
-                  child: const Text(
-                    "Add",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      ),
+                      autofocus: true,
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        setState(() {
+                          amount = double.tryParse(value) ?? 0.0;
+                        });
+                      },
                     ),
                   ),
-                ),
+
+                  const SizedBox(width: 10), // Espacio entre input y botón
+
+                  // Add Button
+                  SizedBox(
+                    height: 40,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 6),
+                      ),
+                      onPressed: () {
+                        // Ocultar el teclado
+                        FocusScope.of(context).unfocus();
+
+                        if (widget.selectedDate != null && amount > 0) {
+                          tipProvider.addTip(
+                            Tip(
+                              amount: amount,
+                              currency: currencyIndex == 0,
+                              date: widget.selectedDate!
+                                  .toLocal()
+                                  .toString()
+                                  .split(' ')[0],
+                            ),
+                          );
+                          widget.onAddTip();
+                          amountController.clear();
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Tip successfully added!',
+                                style: TextStyle(color: Colors.teal, fontSize: 16),
+                              ),
+                              backgroundColor: Colors.white,
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      },
+
+                      child: const Text(
+                        "Add",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
+
+
+
+
         ],
       ),
     );

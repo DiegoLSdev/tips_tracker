@@ -1,6 +1,5 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
-import 'package:tips_tracker/styles/theme.dart';
 import '../components/add_tip_dialog.dart';
 
 class AddTipScreen extends StatefulWidget {
@@ -24,7 +23,9 @@ class _AddTipScreenState extends State<AddTipScreen> {
     return Scaffold(
       // backgroundColor: Colors.red,
       appBar: AppBar(
-        title: const Text('Add Tip'),
+        title: const Text('Add Tip',
+        style:  TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.teal,
       ),
       body: Container(
@@ -82,7 +83,7 @@ class _AddTipScreenState extends State<AddTipScreen> {
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 25),
 
               AddTipDialog(
                 selectedDate: selectedDate,
