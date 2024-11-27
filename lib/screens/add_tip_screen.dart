@@ -24,7 +24,7 @@ class _AddTipScreenState extends State<AddTipScreen> {
     return Scaffold(
       // backgroundColor: Colors.red,
       appBar: AppBar(
-        title: Text('Add Tip', style: DarkStyles.title),
+        title: const Text('Add Tip'),
         backgroundColor: Colors.teal,
       ),
       body: Container(

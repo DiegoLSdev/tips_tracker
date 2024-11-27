@@ -86,7 +86,7 @@ class _MonthlyAndYearlyTipsScreenState
     return Scaffold(
       backgroundColor: const Color.fromRGBO(234, 234, 234, 1),
       appBar: AppBar(
-        title: Text('Summary', style: DarkStyles.title),
+        title: const Text('Summary'),
         backgroundColor: Colors.teal,
       ),
       body: Padding(
@@ -111,11 +111,9 @@ class _MonthlyAndYearlyTipsScreenState
                   children: [
                     Text(
                       DateFormat('MMMM yyyy').format(_currentMonth),
-                      style: DarkStyles.title2,
                     ),
                     Text(
                       "Total: €${monthlyTotalEuro.toStringAsFixed(2)} / \$${monthlyTotalDollar.toStringAsFixed(2)}",
-                      style: DarkStyles.subtitle2,
                     ),
                   ],
                 ),
@@ -245,8 +243,8 @@ Expanded(
                   icon: const Icon(Icons.arrow_back),
                   color: Colors.grey,
                 ),
-                Text(DateFormat('yyyy').format(_currentYear),
-                    style: DarkStyles.title2),
+                Text(DateFormat('yyyy').format(_currentYear)
+                ),
                 IconButton(
                     onPressed: () {
                       setState(() {
@@ -280,7 +278,6 @@ Expanded(
                         const SizedBox(height: 4),
                         Text(
                           "€ ${yearlyTotalEuro.toStringAsFixed(2)}",
-                          style: DarkStyles.title,
                         ),
                       ],
                     ),
@@ -303,7 +300,6 @@ Expanded(
                         const SizedBox(height: 4),
                         Text(
                           "\$ ${yearlyTotalDollar.toStringAsFixed(2)}",
-                          style: DarkStyles.title,
                         ),
                       ],
                     ),

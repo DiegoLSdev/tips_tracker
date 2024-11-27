@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DarkStyles {
-  static TextStyle title = TextStyle(
-    color:  Colors.white,
-    fontSize: 24.sp,
+  static TextStyle title = const TextStyle(
+    color:  Colors.red,
+    fontSize: 24,
     fontWeight: FontWeight.bold,
   );
 
-  static TextStyle title2 = TextStyle(
-    color:  Colors.teal,
-    fontSize: 24.sp,
+  static TextStyle title2 = const TextStyle(
+    color:  Colors.red,
+    fontSize: 24,
     fontWeight: FontWeight.bold,
   );
 
